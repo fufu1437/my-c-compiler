@@ -7,21 +7,52 @@ import (
 	"strings"
 )
 
-// This program is self-contained on purpose: shipthatcode's grader only
-// compiles the entrypoint (main.go) and ignores extra files, and its
-// workspace has no go.mod. Importing a local package would therefore fail
-// there, so the tokenizer lives in this file instead of token/.
+// TODO (compiler-pipeline): implement per the lesson description.
+
+func main() {
+	sc := bufio.NewScanner(os.Stdin)
+	sc.Buffer(make([]byte, 1024*1024), 1024*1024)
+	for sc.Scan() {
+		line := sc.Text()
+		if line == "" {
+			continue
+		}
+
+		// fmt.Println("[DEBUG]", line)
+
+		tks := Tokenizer(line)
+		PrintTokens(tks)
+		fmt.Println()
+		// files := strings.Split(line, ".")
+		// switch files[len(files)-1] {
+		// case "c":
+		// 	fmt.Println("SOURCE")
+		// case "i":
+		// 	fmt.Println("PREPROCESSED")
+		// case "s":
+		// 	fmt.Println("ASSEMBLY")
+		// case "o":
+		// 	fmt.Println("OBJECT")
+		// case "a":
+		// 	fmt.Println("STATIC_LIB")
+		// case "so", "dylib", "dll":
+		// 	fmt.Println("SHARED_LIB")
+		// default:
+		// 	fmt.Println("EXECUTABLE")
+		// }
+	}
+}
 
 type TokenType string
 
 const (
-	KW  TokenType = "KW"
-	ID  TokenType = "ID"
-	INT TokenType = "INT"
-	OP  TokenType = "OP"
+	KW  = "KW"
+	ID  = "ID"
+	INT = "INT"
+	OP  = "OP"
 )
 
-var keywords = map[string]bool{
+var KeyWords = map[string]bool{
 	"int":    true,
 	"if":     true,
 	"else":   true,
@@ -29,7 +60,7 @@ var keywords = map[string]bool{
 	"return": true,
 }
 
-var operators = map[string]bool{
+var Operators = map[string]bool{
 	"+":  true,
 	"-":  true,
 	"*":  true,
@@ -53,99 +84,137 @@ type Token struct {
 	Line, Cow uint64
 }
 
-func tokenizer(code string) []Token {
+func Tokenizer(code string) []Token {
 	tks := make([]Token, 0, 10)
 	codes := []rune(code)
-	n := len(codes)
-	var line, col uint64
+	len_codes := len(codes)
+	var line uint64 = 0
+	var cow uint64 = 0
 
-	for i := 0; i < n; i++ {
+	for i := 0; i < len_codes; i++ {
 		if isSpace(codes[i]) {
-			for i < n && isSpace(codes[i]) {
+			for isSpace(codes[i]) {
 				if codes[i] == '\n' {
 					line++
-					col = 0
+					cow = 0
 				} else {
-					col++
+					cow++
 				}
 				i++
 			}
-			if i >= n {
-				break
-			}
+			// i--
+
 		}
 
-		start := i
-		startCol := col
-		c := codes[i]
-
-		switch {
-		case isAsciiLetter(c) || c == '_':
-			for i < n && (isAsciiLetter(codes[i]) || isNumber(codes[i]) || codes[i] == '_') {
+		if isAsciiLetter(codes[i]) || codes[i] == '_' {
+			var buf strings.Builder
+			buf.Grow(5)
+			for i < len_codes && (isAsciiLetter(codes[i]) || isNumber(codes[i]) || codes[i] == '_') {
+				buf.WriteRune(codes[i])
 				i++
-				col++
+				cow++
 			}
-			value := string(codes[start:i])
-			tks = append(tks, Token{
-				Type:  tokenType(value),
-				Value: value,
-				Line:  line,
-				Cow:   startCol,
-			})
-			i-- // the loop's own i++ moves past the token
-
-		case isNumber(c):
-			for i < n && isNumber(codes[i]) {
-				i++
-				col++
-			}
-			value := string(codes[start:i])
-			tks = append(tks, Token{
-				Type:  INT,
-				Value: value,
-				Line:  line,
-				Cow:   startCol,
-			})
 			i--
-
-		case isOperator(string(c)):
-			value := string(c)
-			if (c == '!' || c == '=') && i+1 < n && codes[i+1] == '=' {
-				value += "="
-				i++
-				col++
+			cow--
+			if isKeyWords(buf.String()) {
+				tks = append(tks, Token{
+					Value: buf.String(),
+					Type:  KW,
+					Line:  line,
+					Cow:   cow,
+				})
+			} else {
+				tks = append(tks, Token{
+					Value: buf.String(),
+					Type:  ID,
+					Line:  line,
+					Cow:   cow,
+				})
 			}
+
+		} else if isNumber(codes[i]) {
+			var buf strings.Builder
+			buf.Grow(5)
+			for isNumber(codes[i]) {
+				buf.WriteRune(codes[i])
+				i++
+				cow++
+			}
+			i--
+			cow--
 			tks = append(tks, Token{
-				Type:  OP,
-				Value: value,
+				Value: buf.String(),
+				Type:  INT,
 				Line:  line,
-				Cow:   startCol,
+				Cow:   cow,
+			})
+		} else if isOperators(string(codes[i])) {
+
+			var buf strings.Builder
+			buf.Grow(2)
+
+			// if (codes[i] == '!' || codes[i] == '=') && codes[i+1] == '=' {
+
+			// } else {
+
+			// }
+			switch codes[i] {
+			case '!', '=':
+				// fmt.Println("[DEBUG]", string(codes[i]))
+				switch codes[i+1] {
+				case '=':
+					buf.WriteRune(codes[i])
+					// fmt.Println("asdasd", string(codes[i]))
+					buf.WriteRune(codes[i+1])
+					i++
+					cow++
+				default:
+					buf.WriteRune(codes[i])
+				}
+			default:
+				buf.WriteRune(codes[i])
+			}
+			// for isOperators(string(codes[i])) {
+			// 	buf.WriteRune(codes[i])
+			// 	i++
+			// }
+
+			tks = append(tks, Token{
+				Value: buf.String(),
+				Type:  OP,
+				Line:  line,
+				Cow:   cow,
 			})
 		}
 
-		col++
+		cow++
 	}
 	return tks
 }
 
-func printTokens(tks []Token) {
-	parts := make([]string, 0, len(tks))
+func PrintTokens(tks []Token) {
+	var buf []string
 	for _, tk := range tks {
-		parts = append(parts, string(tk.Type)+":"+tk.Value)
+		buf = append(buf, string(tk.Type+":"+TokenType(tk.Value)))
 	}
-	fmt.Println(strings.Join(parts, " "))
+	fmt.Print(strings.Join(buf, " "))
 }
 
-func tokenType(value string) TokenType {
-	if _, ok := keywords[value]; ok {
-		return KW
-	}
-	return ID
+func isKeyWords(c string) bool {
+	_, is := KeyWords[c]
+	return is
 }
 
-func isOperator(c string) bool {
-	_, ok := operators[c]
-	return ok
+func isOneOperators(c string) bool {
+	if len(c) > 1 {
+		return false
+	}
+	return isOperators(c)
+}
+
+func isOperators(c string) bool {
+	_, is := Operators[c]
+	return is
 }
 
 func isSpace(c rune) bool {
@@ -159,20 +228,4 @@ func isNumber(c rune) bool {
 func isAsciiLetter(c rune) bool {
 	return (c >= 'a' && c <= 'z') ||
 		(c >= 'A' && c <= 'Z')
-}
-
-func main() {
-	sc := bufio.NewScanner(os.Stdin)
-	sc.Buffer(make([]byte, 1024*1024), 1024*1024)
-	for sc.Scan() {
-		line := sc.Text()
-		if line == "" {
-			continue
-		}
-		printTokens(tokenizer(line))
-	}
-	if err := sc.Err(); err != nil {
-		fmt.Fprintln(os.Stderr, err)
-		os.Exit(1)
-	}
 }
