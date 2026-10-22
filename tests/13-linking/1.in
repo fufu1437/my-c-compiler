@@ -1,0 +1,4 @@
+DEFINE main a.o
+DEFINE printf libc.o
+REF printf a.o
+REF foo a.o

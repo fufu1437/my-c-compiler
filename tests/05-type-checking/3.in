@@ -1,0 +1,4 @@
+DECL global counter int
+DECL bar counter char
+REF bar counter
+REF baz counter

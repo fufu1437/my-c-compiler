@@ -1,0 +1,2 @@
+a.o:printf:RESOLVED
+a.o:foo:UNDEFINED

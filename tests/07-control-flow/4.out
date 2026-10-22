@@ -1,0 +1,7 @@
+L_start:
+  BR_IF_NOT i, L_end
+  a = a + 1
+  b = b - 1
+  print a
+  BR L_start
+L_end:

@@ -1,0 +1,2 @@
+mov rdi, 1
+call g

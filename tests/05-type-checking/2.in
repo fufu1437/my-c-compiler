@@ -1,0 +1,2 @@
+DECL global x int
+REF global x

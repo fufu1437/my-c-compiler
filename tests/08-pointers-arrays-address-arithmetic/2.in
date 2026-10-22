@@ -1,0 +1,2 @@
+PTR p int
+DEREF p

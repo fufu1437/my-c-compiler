@@ -1,0 +1,1 @@
+KW:while OP:( ID:x OP:== INT:0 OP:) KW:return INT:1 OP:;

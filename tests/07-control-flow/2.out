@@ -1,0 +1,5 @@
+L_start:
+  BR_IF_NOT x, L_end
+  body1
+  BR L_start
+L_end:

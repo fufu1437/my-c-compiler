@@ -1,0 +1,8 @@
+mov rax, 5
+push rax
+mov rax, 10
+push rax
+pop rdi
+pop rax
+add rax, rdi
+push rax

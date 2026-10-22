@@ -1,0 +1,5 @@
+INT y
+PTR p int
+ADDR y
+ADDR p
+DEREF p

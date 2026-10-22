@@ -1,0 +1,12 @@
+foo:
+    push rbp
+    mov rbp, rsp
+    sub rsp, 32
+bar:
+    push rbp
+    mov rbp, rsp
+    sub rsp, 0
+baz:
+    push rbp
+    mov rbp, rsp
+    sub rsp, 48

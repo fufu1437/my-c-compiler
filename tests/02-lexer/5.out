@@ -1,0 +1,1 @@
+KW:while OP:( ID:i OP:!= INT:0 OP:) ID:i OP:= ID:i OP:- INT:1 OP:;

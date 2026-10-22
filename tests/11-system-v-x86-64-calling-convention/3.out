@@ -1,0 +1,4 @@
+mov rdi, 1
+mov rsi, 2
+mov rdx, 3
+call h

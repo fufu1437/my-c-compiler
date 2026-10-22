@@ -1,0 +1,4 @@
+DEFINE foo x.o
+DEFINE bar y.o
+REF foo y.o
+REF baz x.o

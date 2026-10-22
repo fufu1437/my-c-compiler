@@ -1,0 +1,4 @@
+f:
+    push rbp
+    mov rbp, rsp
+    sub rsp, 16

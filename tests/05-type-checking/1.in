@@ -1,0 +1,5 @@
+DECL global x int
+DECL foo y char
+REF foo y
+REF foo x
+REF foo z

@@ -1,0 +1,2 @@
+DEFINE main a.o
+REF main a.o

@@ -1,0 +1,6 @@
+foo.c
+foo.i
+foo.s
+foo.o
+mylib.a
+program

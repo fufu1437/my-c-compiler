@@ -1,0 +1,6 @@
+L_start:
+  BR_IF_NOT x, L_end
+  i = i + 1
+  print i
+  BR L_start
+L_end:

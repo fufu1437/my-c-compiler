@@ -1,0 +1,1 @@
+KW:int ID:x OP:= INT:42 OP:+ ID:foo OP:;

@@ -1,0 +1,6 @@
+L_start:
+  BR_IF_NOT cond, L_end
+  step1
+  step2
+  BR L_start
+L_end:

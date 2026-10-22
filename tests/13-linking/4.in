@@ -1,0 +1,3 @@
+DEFINE main a.o
+DEFINE main b.o
+REF main c.o

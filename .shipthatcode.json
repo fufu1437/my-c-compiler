@@ -1,0 +1,66 @@
+{
+  "course": "build-c-compiler",
+  "language": "go",
+  "language_id": 1060,
+  "entrypoint": "main.go",
+  "version": 1,
+  "content_hash": "e4e7e651607cacf4",
+  "lessons": [
+    {
+      "slug": "compiler-pipeline",
+      "tests_hash": "57389d4d66fd"
+    },
+    {
+      "slug": "lexer",
+      "tests_hash": "8524e44eac0e"
+    },
+    {
+      "slug": "parser",
+      "tests_hash": "aa40b7d3060a"
+    },
+    {
+      "slug": "parsing-statements-and-declarations",
+      "tests_hash": "380f864d6ca4"
+    },
+    {
+      "slug": "type-checking",
+      "tests_hash": "ba1659d21435"
+    },
+    {
+      "slug": "ir",
+      "tests_hash": "b3d1cfe45ff7"
+    },
+    {
+      "slug": "control-flow",
+      "tests_hash": "a90e0294e779"
+    },
+    {
+      "slug": "pointers-arrays-address-arithmetic",
+      "tests_hash": "97c49d139bbb"
+    },
+    {
+      "slug": "x86-basics",
+      "tests_hash": "ceffce768b7d"
+    },
+    {
+      "slug": "codegen",
+      "tests_hash": "b944199e9889"
+    },
+    {
+      "slug": "system-v-x86-64-calling-convention",
+      "tests_hash": "f9c8addc40e2"
+    },
+    {
+      "slug": "optimizations",
+      "tests_hash": "69dc2da9a727"
+    },
+    {
+      "slug": "linking",
+      "tests_hash": "f0376440e6a0"
+    },
+    {
+      "slug": "register-allocation-linear-scan",
+      "tests_hash": "3a66305db648"
+    }
+  ]
+}
